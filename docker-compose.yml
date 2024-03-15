@@ -1,0 +1,40 @@
+# 파이썬 버젼 지정
+version: "3.12"
+services:
+  # first container : fastapi
+  fastapi:
+    build:
+      context: .
+      args:
+        - DEV=true
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app
+      - dev-static-data:/vol/web
+    command: >
+      sh -c "python main.py"
+             
+    # db를 위한 환경변수 지정
+    environment:
+      - DB_HOST=db
+      - DB_NAME=mp_test
+      - DB_USER=meoyong
+      - DB_PASS=eodyd456
+      - DEBUG=1
+    # db라는 컨테이너가 실행되어있어야 이 컨테이너가 실행됨
+    depends_on:
+      - db
+
+  # second container : PostgreSQL
+  db:
+    image: postgres:16
+    volumes: 
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=mp_test
+      - POSTGRES_USER=meoyong
+      - POSTGRES_PASSWORD=eodyd456
+
+volumes:
+  dev-static-data:

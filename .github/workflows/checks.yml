@@ -1,0 +1,14 @@
+---
+name: Checks
+
+on: [push]
+
+jobs:
+  test-lint:
+    name: Test and test-lint
+    runs-on: ubuntu-20.04
+    steps:
+      - name: CheckOut
+        uses: actions/checkout@v2
+      - name: Test
+        run: docker-compose run --rm fastapi sh -c "python main.py"
