@@ -13,7 +13,7 @@ COPY ./scripts /scripts
 
 # 워킹디렉토리 지정
 WORKDIR /app
-# 포트 지정
+# 포트 지정?
 EXPOSE 8000
 # DEV 개발 환경 여부
 ARG DEV=true
@@ -46,7 +46,8 @@ RUN python -m venv /py && \
     mkdir -p /vol/web/static && \
     # 생성한 유저를 폴더의 오너로 지정
     chown -R fastapi-user:fastapi-user /vol && \
-    # 폴더에 대한 접근 권한부여 
+    # 폴더에 대한 접근 권한부여
+    # 755 : 
     chmod -R 755 /vol && \
     # 스크립트 파일을 실행시키기위해 폴더에 대한 권한 부여
     chmod -R +x /scripts
@@ -57,5 +58,7 @@ ENV PATH="/scripts:/py/bin:$PATH"
 # 컨테이너 이미지를 빌드할 때 생성한 fastapi-user를 사용자로 지정하고, 실행할 때 이 유저를 사용함
 USER fastapi-user
 
+# CMD ["uvicorn", "main:app", "--host", "127.0.0.1", "--port", "8000"]
 # 스크립트 폴더내의 쉘 스크립트 실행
 # CMD ["run.sh"]
+

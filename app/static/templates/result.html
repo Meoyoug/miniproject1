@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% if question_plots %}
+    {% for plots in question_plots %}
+        <div class="plot-container">
+            {{ plots | safe }}
+        </div>
+    {% endfor %}
+    {% endif %}
+</body>
+</html>

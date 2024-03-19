@@ -15,7 +15,7 @@ class Answer(Base):
     __tablename__ = "answers"
 
     id = Column(Integer, primary_key=True, index=True)
-    anwswer = Column(Boolean, nullable=False)
+    answer = Column(Boolean, nullable=False)
     gender = Column(String, nullable=False)
     age = Column(Integer, nullable=False)
     job = Column(String, default=None)
@@ -23,3 +23,13 @@ class Answer(Base):
     question_id = Column(Integer, ForeignKey("questions.id"))
 
     question = relationship("Question", back_populates="answers")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "answer": self.answer,
+            "gender": self.gender,
+            "age": self.age,
+            "job": self.job,
+            "question_id": self.question_id,
+        }

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>admin page</title>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top" style="z-index: 1000;">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Admin Page</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Question-Statistics</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Answer-Statistics</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container-fluid" style="margin-top: 20px;">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar" 
+                style="position: fixed;
+                       left: 0;
+                       top: 56px;
+                       height: 100vh;
+                       overflow-y: auto;
+                       width: 200px;
+                       z-index: 2;">
+                <div class="position-sticky d-flex align-items-center">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#submenu1" role="button" aria-expanded="false" aria-controls="submenu1" style="color: black; font-weight: bold;">
+                                Question
+                            </a>
+                            <div class="collapse" id="submenu1">
+                                <ul class="nav flex-column">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#" id="q_data">모든 데이터 보기</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#" id="q_search">검색하기</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#" id="q_add">질문 추가하기</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#submenu2" role="button" aria-expanded="false" aria-controls="submenu1" style="color: rgb(0, 0, 0); font-weight: bold;">
+                                Answer
+                            </a>
+                            <div class="collapse" id="submenu2">
+                                <ul class="nav flex-column">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#" id="a_data">모든 데이터 보기</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#" id="a_search">검색하기</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#submenu3" role="button" aria-expanded="false" aria-controls="submenu1" style="color: rgb(0, 0, 0); font-weight: bold;">
+                                Statistics
+                            </a>
+                            <div class="collapse" id="submenu3">
+                                <ul class="nav flex-column">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#" id="s_data">모든 통계 보기</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#" id='s_search'>검색하기</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- 본문 영역 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" id="main-content">
+            <!-- 본문 내용을 이곳에 추가할 수 있습니다. -->
+                <div class="container mt-3" style="margin-left: 10;margin-right: 10;">
+                    <h3 class="mt-5 mb-3" id="db-header">Question Data List</h3>
+                    <div class = "row row-cols-lg-auto g-3 align-items-center">
+                        <form class="row row-cols-lg-auto g-3 align-items-center"  action="#" method="get" id="search_form">
+                            <div class="col-3">
+                                <input type="text" class="form-control" id="input_keyword" placeholder="키워드을 입력해주세요" name="keyword">
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" id="search-btn" class="btn btn-primary">조회</button>
+                            </div>
+                        </form>
+                    <div class="delete_bt">
+                        <button id="delete-btn" class="btn btn-danger mt-3" onclick="delete_question()">선택된 질문 삭제</button>
+                    </div>
+                    <div class="update_bt">
+                        <button id="update-btn" class="btn btn-success mt-3" onclick="update_question()">질문 생성하기</button>
+                    </div>
+                </div>
+                <div class="container mt-3 table-responsive-md">
+                    <table class="table">
+                        <thead>
+                            <th scope="col" class="col-1">선택</th>
+                            <th scope="col" class="col-1">id</th>
+                            <th scope="col" class="col-7">Question</th>
+                            <th scope="col" class="col-1">세부사항</th>
+                        </thead>
+                        <tbody id="data-table">
+                        <!--  불러온 데이터가 들어가는 자리 -->
+                        {% if question_data %}
+                        {% for data in question_data %}
+                            <tr>
+                                <td>&nbsp&nbsp<input type = "checkbox" class = "select_checkbox"></td>
+                                <td>{{data['id']}}</td>
+                                <td>{{data['content']}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-secondary">Details</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="container mt-3" style="margin-left: 10;margin-right: 10;">
+                    <h3 class="mt-5 mb-3" id="db-header">Answer Data List</h3>
+                    <div class = "row row-cols-lg-auto g-3 align-items-center">
+                        <form class="row row-cols-lg-auto g-3 align-items-center"  action="/search" method="get" id="search_form">
+                            <div class="col-3">
+                                <input type="text" class="form-control" id="input_keyword" placeholder="키워드을 입력해주세요" name="keyword">
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" id="search-btn" class="btn btn-primary">조회</button>
+                            </div>
+                        </form>
+                    <div class="delete_bt">
+                        <button id="delete-btn" class="btn btn-danger mt-3" onclick="delete_question()">선택된 답변 삭제</button>
+                    </div>
+                </div>
+                <div class="container mt-3 table-responsive-md">
+                    <table class="table">
+                        <thead>
+                            <thead>
+                                <th scope="col" class="col-1">선택</th>
+                                <th scope="col" class="col-1">id</th>
+                                <th scope="col" class="col-2">Answer</th>
+                                <th scope="col" class="col-2">gender</th>
+                                <th scope="col" class="col-2">age</th>
+                                <th scope="col" class="col-2">job</th>
+                                <th scope="col" class="col-1">세부사항</th>
+                            </thead>
+                        </thead>
+                        <tbody id="data-table">
+                        <!--  불러온 데이터가 들어가는 자리 -->
+                        {% if answer_data %}
+                        {% for data in answer_data %}
+                            <tr>
+                                <td>&nbsp&nbsp<input type = "checkbox" class = "select_checkbox"></td>
+                                <td>{{data['id']}}</td>
+                                <td>{{data['answer']}}</td>
+                                <td>{{data['gender']}}</td>
+                                <td>{{data['age']}}</td>
+                                <td>{{data['job']}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-secondary">Details</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            
+            </main>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="/app/static/templates/admin.js"></script>
+</body>
+
+<script>
+
+</script>
+</html>
