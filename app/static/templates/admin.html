@@ -22,6 +22,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#">Answer-Statistics</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">User-Statistics</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -46,13 +49,7 @@
                             <div class="collapse" id="submenu1">
                                 <ul class="nav flex-column">
                                     <li class="nav-item">
-                                        <a class="nav-link" href="#" id="q_data">모든 데이터 보기</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#" id="q_search">검색하기</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#" id="q_add">질문 추가하기</a>
+                                        <a class="nav-link" href='#' id="q_data">모든 데이터 보기</a>
                                     </li>
                                 </ul>
                             </div>
@@ -66,23 +63,17 @@
                                     <li class="nav-item">
                                         <a class="nav-link" href="#" id="a_data">모든 데이터 보기</a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#" id="a_search">검색하기</a>
-                                    </li>
                                 </ul>
                             </div>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="collapse" href="#submenu3" role="button" aria-expanded="false" aria-controls="submenu1" style="color: rgb(0, 0, 0); font-weight: bold;">
-                                Statistics
+                                User
                             </a>
                             <div class="collapse" id="submenu3">
                                 <ul class="nav flex-column">
                                     <li class="nav-item">
-                                        <a class="nav-link" href="#" id="s_data">모든 통계 보기</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#" id='s_search'>검색하기</a>
+                                        <a class="nav-link" href="#" id="u_data">모든 유저 데이터</a>
                                     </li>
                                 </ul>
                             </div>
@@ -92,107 +83,202 @@
             </nav>
             <!-- 본문 영역 -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" id="main-content">
-            <!-- 본문 내용을 이곳에 추가할 수 있습니다. -->
-                <div class="container mt-3" style="margin-left: 10;margin-right: 10;">
-                    <h3 class="mt-5 mb-3" id="db-header">Question Data List</h3>
-                    <div class = "row row-cols-lg-auto g-3 align-items-center">
-                        <form class="row row-cols-lg-auto g-3 align-items-center"  action="#" method="get" id="search_form">
-                            <div class="col-3">
-                                <input type="text" class="form-control" id="input_keyword" placeholder="키워드을 입력해주세요" name="keyword">
-                            </div>
-                            <div class="col-auto">
-                                <button type="submit" id="search-btn" class="btn btn-primary">조회</button>
-                            </div>
-                        </form>
-                    <div class="delete_bt">
-                        <button id="delete-btn" class="btn btn-danger mt-3" onclick="delete_question()">선택된 질문 삭제</button>
-                    </div>
-                    <div class="update_bt">
-                        <button id="update-btn" class="btn btn-success mt-3" onclick="update_question()">질문 생성하기</button>
-                    </div>
+                <!-- 본문 내용을 이곳에 추가할 수 있습니다. -->
+                <!-- 어드민 로그인 폼 -->
+                <div class="container" id="loginFormDiv" style="margin-top: 40px;">
+                    <form id="loginForm">
+                        <h1>Admin Login Page</h1>
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="admin_username">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" autocomplate="current-password" class="form-control" id="admin_password">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </form>
                 </div>
-                <div class="container mt-3 table-responsive-md">
-                    <table class="table">
-                        <thead>
-                            <th scope="col" class="col-1">선택</th>
-                            <th scope="col" class="col-1">id</th>
-                            <th scope="col" class="col-7">Question</th>
-                            <th scope="col" class="col-1">세부사항</th>
-                        </thead>
-                        <tbody id="data-table">
-                        <!--  불러온 데이터가 들어가는 자리 -->
-                        {% if question_data %}
-                        {% for data in question_data %}
-                            <tr>
-                                <td>&nbsp&nbsp<input type = "checkbox" class = "select_checkbox"></td>
-                                <td>{{data['id']}}</td>
-                                <td>{{data['content']}}</td>
-                                <td>
-                                    <button type="button" class="btn btn-secondary">Details</button>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        {% endif %}
-                        </tbody>
-                    </table>
+                <!-- 질문 생성 폼 -->
+                <div class="container" id="createQuestionFormDiv" style="margin-top: 40px; display: none;">
+                    <form id="createQuestionForm">
+                        <h1>Create Question</h1>
+                        <div class="mb-3">
+                            <label for="question_text" class="form-label">Question</label>
+                            <input type="text" class="form-control" id="question_text">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </form>
                 </div>
-                <div class="container mt-3" style="margin-left: 10;margin-right: 10;">
-                    <h3 class="mt-5 mb-3" id="db-header">Answer Data List</h3>
-                    <div class = "row row-cols-lg-auto g-3 align-items-center">
-                        <form class="row row-cols-lg-auto g-3 align-items-center"  action="/search" method="get" id="search_form">
-                            <div class="col-3">
-                                <input type="text" class="form-control" id="input_keyword" placeholder="키워드을 입력해주세요" name="keyword">
+                <!-- 유저 생성 폼 -->
+                <div class="container" id="createUserFormDiv" style="margin-top: 40px; display: none;">
+                    <form id="createUserForm">
+                        <h1>Create User Page</h1>
+                        <div class="mb-3">
+                            <label for="createUsername" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="createUsername">
+                        </div>
+                        <div class="mb-3">
+                            <label for="createPassword" class="form-label">Password</label>
+                            <input type="password" autocomplate="new-password" class="form-control" id="createPassword">
+                        </div>
+                        <div class="mb-3">
+                            <label for="createAge" class="form-label">Age</label>
+                            <input type="number" class="form-control" id="createAge">
+                        </div>
+                        <div class="mb-3">
+                            <label for="createGender" class="form-label">Gender</label>
+                            <select class="form-select" id="createGender">
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </form>
+                </div>
+                <div class="container mt-3"  id="question-datalist" style="display: none;">
+                    <div class="container mt-3" style="margin-left: 10;margin-right: 10;">
+                        <h3 class="mt-5 mb-3" id="db-header">Question Data List</h3>
+                        <div class = "row row-cols-lg-auto g-3 align-items-center">
+                            <form class="row row-cols-lg-auto g-3 align-items-center"  action="#" method="get" id="q_search_form">
+                                <div class="col-3">
+                                    <input type="text" class="form-control" id="input_keyword" placeholder="키워드을 입력해주세요" name="keyword">
+                                </div>
+                                <div class="col-auto">
+                                    <button type="submit" id="q-search-btn" class="btn btn-primary">조회</button>
+                                </div>
+                            </form>
+                            <div class="delete_bt">
+                                <button id="delete-btn" class="btn btn-danger mt-3" onclick="delete_question()">선택된 질문 삭제</button>
                             </div>
-                            <div class="col-auto">
-                                <button type="submit" id="search-btn" class="btn btn-primary">조회</button>
+                            <div class="update_bt">
+                                <button id="update-btn" class="btn btn-success mt-3" onclick="showCreateQuestionForm()">질문 생성하기</button>
                             </div>
-                        </form>
-                    <div class="delete_bt">
-                        <button id="delete-btn" class="btn btn-danger mt-3" onclick="delete_question()">선택된 답변 삭제</button>
+                            <div class="active_bt">
+                                <button id="active-btn" class="btn btn-success mt-3" onclick="activate_question()">질문 활성화하기</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="container mt-3 table-responsive-md">
-                    <table class="table">
-                        <thead>
+                    <div class="container mt-3 table-responsive-md">
+                        <table class="table">
                             <thead>
                                 <th scope="col" class="col-1">선택</th>
                                 <th scope="col" class="col-1">id</th>
-                                <th scope="col" class="col-2">Answer</th>
-                                <th scope="col" class="col-2">gender</th>
-                                <th scope="col" class="col-2">age</th>
-                                <th scope="col" class="col-2">job</th>
-                                <th scope="col" class="col-1">세부사항</th>
+                                <th scope="col" class="col-7">Question</th>
+                                <th scope="col" class="col-7">active</th>
                             </thead>
-                        </thead>
-                        <tbody id="data-table">
-                        <!--  불러온 데이터가 들어가는 자리 -->
-                        {% if answer_data %}
-                        {% for data in answer_data %}
-                            <tr>
-                                <td>&nbsp&nbsp<input type = "checkbox" class = "select_checkbox"></td>
-                                <td>{{data['id']}}</td>
-                                <td>{{data['answer']}}</td>
-                                <td>{{data['gender']}}</td>
-                                <td>{{data['age']}}</td>
-                                <td>{{data['job']}}</td>
-                                <td>
-                                    <button type="button" class="btn btn-secondary">Details</button>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        {% endif %}
-                        </tbody>
-                    </table>
+                            <tbody id="data-table">
+                            <!--  불러온 데이터가 들어가는 자리 -->
+                            {% if question_data %}
+                            {% for data in question_data %}
+                                <tr>
+                                    <td>&nbsp&nbsp<input type = "checkbox" class = "question_checkbox"></td>
+                                    <td>{{data['id']}}</td>
+                                    <td>{{data['content']}}</td>
+                                    <td>{{data['active']}}</td>
+                                </tr>
+                            {% endfor %}
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            
+
+                <div class="container mt-3"  id="answer-datalist" style="display: none;">
+                    <div class="container mt-3" style="margin-left: 10;margin-right: 10;" id="answer-datalist" style="display: none">
+                        <h3 class="mt-5 mb-3" id="db-header">Answer Data List</h3>
+                        <div class = "row row-cols-lg-auto g-3 align-items-center">
+                            <div class="delete_bt">
+                                <button id="delete-btn" class="btn btn-danger mt-3" onclick="delete_answer()">선택된 답변 삭제</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container mt-3 table-responsive-md">
+                        <table class="table">
+                            <thead>
+                                <thead>
+                                    <th scope="col" class="col-1">선택</th>
+                                    <th scope="col" class="col-1">id</th>
+                                    <th scope="col" class="col-2">Answer</th>
+                                    <th scope="col" class="col-2">user_id</th>
+                                    <th scope="col" class="col-2">question_id</th>
+                                </thead>
+                            </thead>
+                            <tbody id="data-table">
+                            <!--  불러온 데이터가 들어가는 자리 -->
+                            {% if answer_data %}
+                            {% for data in answer_data %}
+                                <tr>
+                                    <td>&nbsp&nbsp<input type = "checkbox" class = "answer_checkbox"></td>
+                                    <td>{{data['id']}}</td>
+                                    <td>{{data['answer']}}</td>
+                                    <td>{{data['user_id']}}</td>
+                                    <td>{{data['question_id']}}</td>
+                                </tr>
+                            {% endfor %}
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="container mt-3"  id="user-datalist" style="display: none;">
+                    <div class="container mt-3" style="margin-left: 10;margin-right: 10;" id="user-datalist" style="display: none">
+                        <h3 class="mt-5 mb-3" id="db-header">User Data List</h3>
+                        <div class = "row row-cols-lg-auto g-3 align-items-center">
+                            <form class="row row-cols-lg-auto g-3 align-items-center"  action="#" method="get" id="q_search_form">
+                                <div class="col-3">
+                                    <input type="text" class="form-control" id="input_keyword" placeholder="키워드을 입력해주세요" name="keyword">
+                                </div>
+                                <div class="col-auto">
+                                    <button type="submit" id="q-search-btn" class="btn btn-primary">조회</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="delete_bt">
+                            <button id="delete-btn" class="btn btn-danger mt-3" onclick="delete_user()">선택된 유저 삭제</button>
+                        </div>
+                        <div class="update_bt">
+                            <button id="create-user-btn" class="btn btn-success mt-3" onclick="showCreateUserForm()">유저 생성하기</button>
+                        </div>
+                    </div>
+                    <div class="container mt-3 table-responsive-md">
+                        <table class="table">
+                            <thead>
+                                <thead>
+                                    <th scope="col" class="col-1">선택</th>
+                                    <th scope="col" class="col-1">id</th>
+                                    <th scope="col" class="col-2">username</th>
+                                    <th scope="col" class="col-2">gender</th>
+                                    <th scope="col" class="col-2">age</th>
+                                    <th scope="col" class="col-2">is_superuser</th>
+                                    <th scope="col" class="col-1">세부사항</th>
+                                </thead>
+                            </thead>
+                            <tbody id="data-table">
+                            <!--  불러온 데이터가 들어가는 자리 -->
+                            {% if user_data %}
+                            {% for data in user_data %}
+                                <tr>
+                                    <td>&nbsp&nbsp<input type = "checkbox" class = "user_checkbox"></td>
+                                    <td>{{data['id']}}</td>
+                                    <td>{{data['username']}}</td>
+                                    <td>{{data['gender']}}</td>
+                                    <td>{{data['age']}}</td>
+                                    <td>{{data['is_superuser']}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-secondary">Details</button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </main>
         </div>
     </div>
+    <script src="/static/scripts/admin.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script src="/app/static/templates/admin.js"></script>
 </body>
-
-<script>
-
-</script>
 </html>

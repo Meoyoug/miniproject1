@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>PsyTest Page</title>
+    <style>
+        .question {
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .question.hidden {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <header style="align-self: center;">
+        <div class="card">
+            <div class="card-header">
+                시작하기
+            </div>
+            <div class="card-body">
+                <h1 class="card-title">Welcome To PsyTest</h1>
+                <h4 class="card-text">If you are ready to test, click the Start button.</h4>
+                <h6 class="card-text">심리테스트를 빙자한 그냥 아무질문이나 때려박은 설문지(?) 입니다.</h6>
+
+                <a href="#" class="btn btn-primary" id="startTest">시작하기</a>
+            </div>
+        </div>
+    </header>
+    <div id="question_box" style="width: 80%; height: 70%; margin: auto; margin-top: 200px; display: none; align-items: center; justify-content: center;">
+        <div class="question">
+            <h1 id="question_text" style="font-size: 300%; align-content: center;"></h1>
+        </div>
+        <div class="row row-cols-lg-auto g-3 align-items-center justify-content-center" id="btnDiv" style="margin-top: 100px;">
+            <div class="yes_bt">
+                <button 
+                    class="btn btn-success btn-lg mt-3"
+                    type="button"
+                    style= "margin-right: 100px;"
+                    id="yes">Yes!!
+                </button>
+            </div>
+            <div class="no_bt">
+                <button 
+                    class="btn btn-danger btn-lg mt-3"
+                    type="button"
+                    style= "margin-left: 100px;"
+                    id="no">No..
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+<script>
+    var questionIndex = 0;
+    var activeQuestions = [];
+    var activeQuestionsContent = [];
+    var activeQuestionsId = [];
+    var answer = [];
+
+    function getToken(){
+        return sessionStorage.getItem('token');
+    }   
+
+    document.getElementById('yes').addEventListener('click', function(){
+        answer.push(true);
+        addAnswer();
+    })
+
+    document.getElementById('no').addEventListener('click', function(){
+        answer.push(false);
+        addAnswer();
+    })
+
+    function makeAnswerDict(){
+        answerDict = {}
+        for(var i = 0; i < answer.length; i++){
+            answerDict[activeQuestionsId[i]] = answer[i]
+        }
+        return answerDict;
+    }
+
+    function ininitializing(){
+        questionIndex = 0;
+        activeQuestions = [];
+        activeQuestionsContent = [];
+        activeQuestionsId = [];
+        answer = [];
+    }
+
+    function addAnswer() {
+        if (questionIndex < activeQuestionsContent.length -1) {
+            var questionText = document.getElementById("question_text");
+            questionText.classList.add("hidden");
+            setTimeout(function() {
+                questionText.innerText = activeQuestionsContent[questionIndex];
+                questionText.classList.remove("hidden");
+            }, 500);
+            questionIndex++;
+        } else {
+            submitAnswer();
+            moveToResultsPage();
+        }
+    }
+
+    function moveToResultsPage(){
+        fetch('/survey/results',{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + getToken()
+            },
+        })
+        .then(response => {
+            if (response.status == 200){
+                location.href = "/survey/results";
+            }
+        })
+        .catch(error => {
+            console.error('Error: ', error);
+        })
+    }
+
+    function submitAnswer(){
+        var answerDict = makeAnswerDict();
+        fetch('/survey/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + getToken()
+            },
+            body: JSON.stringify({
+                answers: answerDict
+            })
+        })
+        .then(response => {
+            if (response.status == 200) {
+                alert("답변이 완료되었습니다. 확인 버튼을 누르시면 통계페이지로 이동합니다.");
+            }
+        })
+        .catch(error => {
+            console.error('Error: ', error);
+        })
+    }
+
+    function getActiveQuestions() {
+        fetch('/survey/getActiveQuestions', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + getToken()
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(function(question){
+            activeQuestionsContent.push(question.content);
+            activeQuestionsId.push(question.id);
+            });
+            document.getElementById("question_text").innerHTML = activeQuestionsContent[0]
+            document.getElementById("question_box").style.display = "block";
+        })
+        .catch(error => {
+            console.error('Error: ', error);
+        })
+    }
+    
+    document.getElementById("startTest").addEventListener("click", function (){
+        getActiveQuestions()
+    })
+
+</script>
+</html>
+
