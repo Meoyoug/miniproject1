@@ -8,7 +8,7 @@ import dependencies
 import schemas
 import models
 import crud
-from services.statistics import AnswerPlotlyGraph
+from services.statistics import GraphGenerator
 
 router = APIRouter()
 templates = Jinja2Templates(directory='static/templates')
@@ -33,10 +33,14 @@ async def show_stats(
     request: Request,
     db: Session = Depends(dependencies.get_db)
 ):
-    # answer_plotdata = AnswerPlotlyGraph.make_bar_charts_by_question(db)
+    plot_generator = GraphGenerator()
+    graph_data = plot_generator.generate_graphs(db=db)
+
     return templates.TemplateResponse('result.html', {
         'request': request, 
-        'answer_by_gender': AnswerPlotlyGraph.make_bar_charts_by_gender(db),
+        'answer_by_age_pie': graph_data['answer_by_age_pie_chart'],
+        'answer_by_gender': graph_data['answer_by_gender_chart'],
+        'answer_ratio_bar': graph_data['answer_bar_chart'],
         })
 
 @router.post("/submit")

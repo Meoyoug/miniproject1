@@ -10,6 +10,9 @@ class QuestionBase(BaseModel):
 class ActivateQuestion(BaseModel):
     question_ids: List[int]
 
+class DeactivateQuestion(ActivateQuestion):
+    pass
+
 class AnswerBase(BaseModel):
     answer: bool
     question_id: int
@@ -60,3 +63,11 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: str | None = None
+
+class UserSearchResponse(UserBase):
+    id : int
+    is_superuser: bool
+
+class QuestionSearchResponse(QuestionBase):
+    id: int
+    active: bool

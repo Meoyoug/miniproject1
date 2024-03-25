@@ -17,10 +17,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Question-Statistics</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Answer-Statistics</a>
+                            <a class="nav-link" href="/survey/results">Question-Statistics</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">User-Statistics</a>
@@ -140,12 +137,12 @@
                     <div class="container mt-3" style="margin-left: 10;margin-right: 10;">
                         <h3 class="mt-5 mb-3" id="db-header">Question Data List</h3>
                         <div class = "row row-cols-lg-auto g-3 align-items-center">
-                            <form class="row row-cols-lg-auto g-3 align-items-center"  action="#" method="get" id="q_search_form">
+                            <form class="row row-cols-lg-auto g-3 align-items-center"  action="#" method="get" id="question-search-form">
                                 <div class="col-3">
-                                    <input type="text" class="form-control" id="input_keyword" placeholder="키워드을 입력해주세요" name="keyword">
+                                    <input type="text" class="form-control" id="question-keyword" placeholder="키워드을 입력해주세요" name="keyword">
                                 </div>
                                 <div class="col-auto">
-                                    <button type="submit" id="q-search-btn" class="btn btn-primary">조회</button>
+                                    <button type="submit" id="question-search-btn" class="btn btn-primary">조회</button>
                                 </div>
                             </form>
                             <div class="delete_bt">
@@ -155,7 +152,10 @@
                                 <button id="update-btn" class="btn btn-success mt-3" onclick="showCreateQuestionForm()">질문 생성하기</button>
                             </div>
                             <div class="active_bt">
-                                <button id="active-btn" class="btn btn-success mt-3" onclick="activate_question()">질문 활성화하기</button>
+                                <button id="active-btn" class="btn btn-info mt-3" onclick="activate_question()">질문 활성화하기</button>
+                            </div>
+                            <div class="deactive_bt">
+                                <button id="deactive-btn" class="btn btn-warning mt-3" onclick="deactivate_question()">질문 비활성화하기</button>
                             </div>
                         </div>
                     </div>
@@ -167,7 +167,7 @@
                                 <th scope="col" class="col-7">Question</th>
                                 <th scope="col" class="col-7">active</th>
                             </thead>
-                            <tbody id="data-table">
+                            <tbody id="question-data-table">
                             <!--  불러온 데이터가 들어가는 자리 -->
                             {% if question_data %}
                             {% for data in question_data %}
@@ -204,7 +204,7 @@
                                     <th scope="col" class="col-2">question_id</th>
                                 </thead>
                             </thead>
-                            <tbody id="data-table">
+                            <tbody id="answer-data-table">
                             <!--  불러온 데이터가 들어가는 자리 -->
                             {% if answer_data %}
                             {% for data in answer_data %}
@@ -225,12 +225,12 @@
                     <div class="container mt-3" style="margin-left: 10;margin-right: 10;" id="user-datalist" style="display: none">
                         <h3 class="mt-5 mb-3" id="db-header">User Data List</h3>
                         <div class = "row row-cols-lg-auto g-3 align-items-center">
-                            <form class="row row-cols-lg-auto g-3 align-items-center"  action="#" method="get" id="q_search_form">
+                            <form class="row row-cols-lg-auto g-3 align-items-center"  action="#" method="get" id="user-search-form">
                                 <div class="col-3">
-                                    <input type="text" class="form-control" id="input_keyword" placeholder="키워드을 입력해주세요" name="keyword">
+                                    <input type="text" class="form-control" id="user-keyword" placeholder="키워드을 입력해주세요" name="keyword">
                                 </div>
                                 <div class="col-auto">
-                                    <button type="submit" id="q-search-btn" class="btn btn-primary">조회</button>
+                                    <button type="submit" id="user-search-btn" class="btn btn-primary">조회</button>
                                 </div>
                             </form>
                         </div>
@@ -254,7 +254,7 @@
                                     <th scope="col" class="col-1">세부사항</th>
                                 </thead>
                             </thead>
-                            <tbody id="data-table">
+                            <tbody id="user-data-table">
                             <!--  불러온 데이터가 들어가는 자리 -->
                             {% if user_data %}
                             {% for data in user_data %}

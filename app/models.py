@@ -50,3 +50,12 @@ class User(Base):
     is_superuser = Column(Boolean, default=False)
 
     answers = relationship("Answer", back_populates="user")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+            "age": self.age,
+            "gender": self.gender,
+            "is_superuser": self.is_superuser
+        }

@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends, Request, HTTPException, status, Response
+from fastapi import APIRouter, Depends, Request, HTTPException, status, Response, Query
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from datetime import timedelta
 from typing import List, Annotated
+from urllib.parse import quote_plus
 import dependencies
 import schemas
 import auth
@@ -55,12 +56,10 @@ async def create_question(
 
 @router.get("/questions")
 async def get_questions(
-    skip: int,
-    limit: int,
     current_user: Annotated[schemas.UserBase, Depends(auth.get_current_superuser)],
     db: Session = Depends(dependencies.get_db),
 ):
-    return crud.get_datas_by_pagenation(model=models.Question, skip=skip, limit=limit, db=db)
+    return crud.get_all_data(model=models.Question, db=db)
 
 @router.get('/questions/{question_id}')
 async def get_question(
@@ -94,7 +93,23 @@ async def activate_question(
     db: Session = Depends(dependencies.get_db)
 ):
     return crud.activate_question(data=data, db=db)
-        
+
+@router.post("/questions/deactivate")
+async def deactivate_question(
+    data: schemas.DeactivateQuestion,
+    current_user: Annotated[schemas.UserBase, Depends(auth.get_current_superuser)],
+    db: Session = Depends(dependencies.get_db)
+):
+    return crud.deactivate_question(data=data, db=db)
+
+@router.get("/questions/search/{keyword}")
+async def search_questions(
+    current_user: Annotated[schemas.UserBase, Depends(auth.get_current_superuser)],
+    keyword: str,
+    db: Session = Depends(dependencies.get_db)
+) -> List[schemas.QuestionSearchResponse]:
+    return crud.search_questions(keyword=keyword, db=db)
+
 @router.post("/answers")
 async def create_answer(
     answer: schemas.AnswerCreate,
@@ -105,12 +120,10 @@ async def create_answer(
 
 @router.get("/answers")
 async def get_answers(
-    skip: int,
-    limit: int,
     current_user: Annotated[schemas.UserBase, Depends(auth.get_current_superuser)],
     db: Session = Depends(dependencies.get_db)
 ):
-    return crud.get_datas_by_pagenation(model=models.Question, skip=skip, limit=limit, db=db)
+    return crud.get_all_data(model=models.Answer, db=db)
 
 @router.delete('/answers')
 async def delete_answers(
@@ -152,7 +165,7 @@ def get_user(
     current_user: Annotated[schemas.UserBase, Depends(auth.get_current_superuser)],
     db: Session = Depends(dependencies.get_db)
 ):
-    return crud.get_datas_by_pagenation(model=models.User, db=db, skip=0, limit=30)
+    return crud.get_all_data(model=models.User, db=db)
 
 @router.post('/user')
 def create_user(
@@ -186,3 +199,11 @@ def update_user(
     db: Session = Depends(dependencies.get_db)
 ):
     return crud.update_data(model=models.User, id=user_id, schema=user, db=db)
+
+@router.get("/user/search/{keyword}")
+async def search_questions(
+    current_user: Annotated[schemas.UserBase, Depends(auth.get_current_superuser)],
+    keyword: str,
+    db: Session = Depends(dependencies.get_db)
+) -> List[schemas.UserSearchResponse]:
+    return crud.search_user(keyword=keyword, db=db)

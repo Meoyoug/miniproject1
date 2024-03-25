@@ -16,6 +16,5 @@ engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 Base = declarative_base()
 
-Base = declarative_base()
 # 아무리 코드가 비동기여도 데이터베이스를 동기로 설정하면 orm, 쿼리 과정에서는 동기로 적용된다
 # 따라서 만약 비동기식으로 작업을 수행하는 코드작성시 데이터베이스 설정할 때 비동기로 설정해주는 것이 중요하다.

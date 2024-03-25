@@ -1,5 +1,6 @@
 from models import Question, Answer, User
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 from fastapi import HTTPException, status, Response
 import schemas
 from typing import Union, List
@@ -41,6 +42,12 @@ def delete_data(model: Union[Question, Answer, User], id, db: Session):
     db.commit()
     # 삭제 완료 메시지 반환
     return {'msg': 'Successfully deleted'}
+
+def get_all_data(
+        model: Union[Question, Answer, User],
+        db: Session,
+):
+    return db.query(model).all()
 
 # 페이징을 적용하여 데이터 조회
 def get_datas_by_pagenation(
@@ -152,6 +159,16 @@ def activate_question(data: schemas.ActivateQuestion, db: Session):
     db.commit()
     return {'msg': 'Activated Question'}
 
+def deactivate_question(data: schemas.DeactivateQuestion, db: Session):
+    for question_id in data.question_ids:
+        question = db.query(Question).filter(Question.id == question_id).first()
+        if question is not None:
+            question.active = False
+        else:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid question id")
+    db.commit()
+    return {'msg': 'Deactivated Question'}
+
 def delete_answers(data: schemas.AnswerDelete, db: Session):
     for id in data.answer_ids:
         answer = db.query(Answer).filter(Answer.id == id).first()
@@ -168,3 +185,22 @@ def get_questions_by_active(db: Session):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No active question")
     questions_dict = [question.to_dict() for question in active_questions]
     return questions_dict
+
+def search_questions(
+    keyword: str,
+    db: Session
+):
+    results = db.query(Question).filter(or_(Question.content.like(f"%{keyword}%"))).all()
+    if not results:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"{keyword}를 포함한 질문이 존재하지 않습니다.")
+    # return [question.to_dict() for question in results]
+    return results
+
+def search_user(
+    keyword: str,
+    db: Session
+):
+    results = db.query(User).filter(or_(User.username.like(f"%{keyword}%"))).all()
+    if not results:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"{keyword}를 포함한 유저가 존재하지 않습니다.")
+    return [user.to_dict() for user in results]
