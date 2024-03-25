@@ -11,7 +11,7 @@ from sqlalchemy.orm import sessionmaker
 # Base = declarative_base()
 
 # 동기용 데이터 베이스 설정 -> psycopg2
-SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://meoyong:eodyd456@fastapi_miniproject-db-1:5432/mp_test"
+SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://meoyong:eodyd456@db:5432/mp_test"
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 Base = declarative_base()

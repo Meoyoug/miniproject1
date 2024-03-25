@@ -170,7 +170,7 @@ def get_user(
 @router.post('/user')
 def create_user(
     user: schemas.UserBase,
-    current_user: Annotated[schemas.UserBase, Depends(auth.get_current_superuser)],
+    # current_user: Annotated[schemas.UserBase, Depends(auth.get_current_superuser)],
     db: Session = Depends(dependencies.get_db)
 ):
     return crud.create_data(model=models.User, schema=user, db=db)

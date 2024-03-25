@@ -37,6 +37,7 @@ class UserBase(BaseModel):
     username: str
     age: int
     gender: str
+    is_superuser: bool
 
     class Config:
         from_attributes = True

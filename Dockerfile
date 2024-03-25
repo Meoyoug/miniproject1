@@ -56,9 +56,9 @@ RUN python -m venv /py && \
 ENV PATH="/scripts:/py/bin:$PATH"
 
 # 컨테이너 이미지를 빌드할 때 생성한 fastapi-user를 사용자로 지정하고, 실행할 때 이 유저를 사용함
-USER fastapi-user
+# USER fastapi-user
 
 # CMD ["uvicorn", "main:app", "--host", "127.0.0.1", "--port", "8000"]
 # 스크립트 폴더내의 쉘 스크립트 실행
-# CMD ["run.sh"]
+CMD ["run.sh"]
 
