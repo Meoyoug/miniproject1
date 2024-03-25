@@ -19,7 +19,7 @@ services:
              
     # db를 위한 환경변수 지정
     environment:
-      - DB_HOST=db
+      - DB_HOST=${db}
       - DB_NAME=mp_test
       - DB_USER=meoyong
       - DB_PASS=eodyd456
@@ -31,12 +31,20 @@ services:
   # second container : PostgreSQL
   db:
     image: postgres:16
+    env_file:
+      - .env
     volumes: 
-      - ./data/db:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=mp_test
-      - POSTGRES_USER=meoyong
-      - POSTGRES_PASSWORD=eodyd456
+      - postgres-data:/var/lib/postgresql/data
+  
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:8000"
+    volumes: 
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - fastapi
 
 volumes:
   dev-static-data:
+  postgres-data:
